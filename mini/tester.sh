@@ -360,4 +360,3 @@ then
 fi
 
 echo "\nIf all was corrrectly display on your server terminal: Perfect, well done! 💪"
-

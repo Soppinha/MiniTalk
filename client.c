@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <student@42.fr>                    +#+  +:+       +#+        */
+/*   By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 00:00:00 by student           #+#    #+#             */
-/*   Updated: 2024/12/19 00:00:00 by student          ###   ########.fr       */
+/*   Updated: 2025/12/22 16:51:56 by svaladar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,19 @@ int	is_valid_pid(char *str)
 
 void	wait_for_confirmation(void)
 {
-	int timeout;
-	timeout = 0;
-	while (!g_received && timeout < 1000)
+	// int	timeout;
+
+	// timeout = 0;
+	while (!g_received)
 	{
-		sleep(10);
-		timeout++;
+		sleep(1);
+		// timeout++;
 	}
-	if (!g_received)
-	{
-		ft_putstr("Error: Server not responding\n");
-		exit(1);
-	}
+	// if (!g_received)
+	// {
+	// 	ft_putstr("Error: Server not responding\n");
+	// 	exit(1);
+	// }
 
 	g_received = 0;
 }
