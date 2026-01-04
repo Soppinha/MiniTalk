@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 00:00:00 by student           #+#    #+#             */
-/*   Updated: 2025/12/23 17:45:15 by svaladar         ###   ########.fr       */
+/*   Updated: 2026/01/04 00:56:49 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	send_bit(void)
 			kill(g_client.server_pid, SIGUSR1);
 		else
 			kill(g_client.server_pid, SIGUSR2);
-		sleep(100);
 		g_client.bit--;
 		if (g_client.bit < 0)
 		{
