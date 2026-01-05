@@ -6,7 +6,7 @@
 /*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:42:42 by svaladar          #+#    #+#             */
-/*   Updated: 2026/01/04 22:39:44 by sofiab           ###   ########.fr       */
+/*   Updated: 2026/01/05 00:16:41 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ typedef struct s_client
 	int				char_index;
 }	t_client;
 
-
 void	init_server_state(void);
 void	process_byte(char bit);
 void	handle_server_signal(int signum, siginfo_t *info, void *context);
-
 
 void	init_client_state(int ac, char **av);
 void	send_bit_to_server(void);
