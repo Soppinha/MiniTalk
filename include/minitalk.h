@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:42:42 by svaladar          #+#    #+#             */
-/*   Updated: 2025/12/23 17:26:57 by svaladar         ###   ########.fr       */
+/*   Updated: 2026/01/04 22:39:44 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 # define PID_ERROR "Error: Invalid PID\n"
 # define PID_NOTEXIST "Process doesn't exist\n"
-# define SERVER_ERROR " "
 # define SERVER_RECEIVE "Server confirmation received.\n"
 # define SERVER_WAITING "Waiting for messages...\n"
 # define CLIENT_ERROR "Usage: ./client [server_pid] [message]\n"
@@ -28,27 +27,27 @@
 typedef struct s_server
 {
 	int		client_pid;
-	int		bit_count;
-	char	byte;
+	int		bits_received;
+	char	current_byte;
 }	t_server;
 
 typedef struct s_client
 {
-	unsigned char	*msg;
 	int				server_pid;
-	int				bit;
-	int				c;
+	unsigned char	*message;
+	int				bit_position;
+	int				char_index;
 }	t_client;
 
-int		is_valid_pid(char *s);
-int		parse_validation(int ac, char **av);
 
-void	init_client(int ac, char **av);
-void	send_bit(void);
-void	signal_handler_client(int signum);
+void	init_server_state(void);
+void	process_byte(char bit);
+void	handle_server_signal(int signum, siginfo_t *info, void *context);
 
-void	server_init(void);
-void	write_byte(char bit);
-void	signal_handler_server(int signum, siginfo_t *info, void *context);
+
+void	init_client_state(int ac, char **av);
+void	send_bit_to_server(void);
+void	handle_client_signal(int signum);
+int		validate_arguments(int ac, char **av);
 
 #endif

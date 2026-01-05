@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   client_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:39:47 by svaladar          #+#    #+#             */
-/*   Updated: 2025/12/23 17:28:10 by svaladar         ###   ########.fr       */
+/*   Updated: 2026/01/04 22:57:51 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-int	is_valid_pid(char *s)
+static int	is_valid_pid(char *s)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ int	is_valid_pid(char *s)
 	return (1);
 }
 
-int	parse_validation(int ac, char **av)
+int	validate_arguments(int ac, char **av)
 {
 	int	server_pid;
 

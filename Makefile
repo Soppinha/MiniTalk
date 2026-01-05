@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+         #
+#    By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/23 00:00:00 by svaladar          #+#    #+#              #
-#    Updated: 2025/12/23 17:34:47 by svaladar         ###   ########.fr        #
+#    Updated: 2026/01/04 22:54:58 by sofiab           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,13 @@ OBJ_CLIENT = $(SRC_CLIENT:.c=.o)
 
 HEADER = $(INC_DIR)/minitalk.h
 
-all: $(NAME_SERVER) $(NAME_CLIENT)
-	@echo "$(GREEN)✓ Compilation complete!$(RESET)"
+all: 
+	@if [ -f $(NAME_SERVER) ] && [ -f $(NAME_CLIENT) ]; then \
+		echo "$(GREEN)✓ Everything is already compiled!$(RESET)"; \
+	else \
+		$(MAKE) $(NAME_SERVER) $(NAME_CLIENT); \
+		echo "$(GREEN)✓ Compilation complete!$(RESET)"; \
+	fi
 
 $(LIBFT):
 	@echo "$(CYAN)Compiling libft...$(RESET)"
