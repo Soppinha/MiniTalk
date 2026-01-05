@@ -6,7 +6,7 @@
 /*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 00:00:00 by student           #+#    #+#             */
-/*   Updated: 2026/01/04 22:34:02 by sofiab           ###   ########.fr       */
+/*   Updated: 2026/01/04 23:35:53 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	main(int ac, char **av)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sa.sa_handler = handle_client_signal;
+	init_client_state(ac, av);
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 	{
 		ft_putstr_fd(SIGUSR1_ERROR, STDERR_FILENO);
@@ -75,7 +76,6 @@ int	main(int ac, char **av)
 		ft_putstr_fd(SIGUSR2_ERROR, STDERR_FILENO);
 		exit(1);
 	}
-	init_client_state(ac, av);
 	send_bit_to_server();
 	while (1)
 		pause();
