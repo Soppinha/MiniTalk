@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isprint.c                                       :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: svaladar <svaladar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofiab <sofiab@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/15 15:08:57 by svaladar          #+#    #+#             */
-/*   Updated: 2025/08/06 16:29:25 by svaladar         ###   ########.fr       */
+/*   Created: 2025/12/23 16:42:42 by svaladar          #+#    #+#             */
+/*   Updated: 2026/01/05 00:16:41 by sofiab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/minitalk.h"
 
-int	ft_isprint(int c)
+static void	handle_server_signal(int signum, siginfo_t *info, void *context)
 {
-	if (c >= 32 && c <= 126)
-		return (1);
+	(void)context;
+	receive_bit(signum, info, SIGUSR2);
+}
+
+int	main(void)
+{
+	start_server(handle_server_signal);
 	return (0);
 }

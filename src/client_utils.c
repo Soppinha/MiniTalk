@@ -12,6 +12,8 @@
 
 #include "../include/minitalk.h"
 
+static t_client	g_client;
+
 static int	is_valid_pid(char *s)
 {
 	int	i;
@@ -54,4 +56,48 @@ int	validate_arguments(int ac, char **av)
 		exit(1);
 	}
 	return (server_pid);
+}
+
+void	send_bit_to_server(void)
+{
+	unsigned char	c;
+
+	if (g_client.finished)
+		exit(0);
+	c = g_client.message[g_client.char_index];
+	if ((c >> g_client.bit_position) & 1)
+		kill(g_client.server_pid, SIGUSR2);
+	else
+		kill(g_client.server_pid, SIGUSR1);
+	g_client.bit_position--;
+	if (g_client.bit_position < 0)
+	{
+		if (c == '\0')
+			g_client.finished = 1;
+		g_client.bit_position = 7;
+		g_client.char_index++;
+	}
+}
+
+void	start_client(int ac, char **av, void (*handler)(int))
+{
+	struct sigaction	sa;
+
+	g_client.server_pid = validate_arguments(ac, av);
+	g_client.message = (unsigned char *)av[2];
+	g_client.bit_position = 7;
+	g_client.char_index = 0;
+	g_client.finished = 0;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = handler;
+	if (sigaction(SIGUSR1, &sa, NULL) == -1
+		|| sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_putstr_fd(SIGUSR1_ERROR, STDERR_FILENO);
+		exit(1);
+	}
+	send_bit_to_server();
+	while (1)
+		pause();
 }

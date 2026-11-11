@@ -10,73 +10,87 @@
 #                                                                              #
 # **************************************************************************** #
 
-RED = \033[0;31m
-GREEN = \033[0;32m
-YELLOW = \033[0;33m
-BLUE = \033[0;34m
-MAGENTA = \033[0;35m
-CYAN = \033[0;36m
-RESET = \033[0m
+SERVER			=	server
+CLIENT			=	client
+SERVER_BONUS	=	server_bonus
+CLIENT_BONUS	=	client_bonus
 
-NAME_SERVER = server
-NAME_CLIENT = client
+# ********************************* OUTPUT ********************************** #
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+TAG				=	minitalk
+RESET			=	\033[0m
+C_TAG			=	\033[1;34m
+C_BUILD			=	\033[0;32m
+C_DONE			=	\033[1;32m
+C_CLEAN			=	\033[0;33m
+C_RM			=	\033[0;31m
+LOG				=	printf "$(C_TAG)%-12s$(RESET) %b%-10s$(RESET) %s\n" "[$(TAG)]"
+SUBMAKE			=	$(MAKE) -s --no-print-directory -C
 
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+# ********************************** BUILD ********************************** #
 
-SRC_DIR = src
-INC_DIR = include
+CC				=	cc
+CFLAGS			=	-Wall -Wextra -Werror
+RM				=	rm -rf
 
-SRC_SERVER = $(SRC_DIR)/server.c
-SRC_CLIENT = $(SRC_DIR)/client.c $(SRC_DIR)/client_utils.c
+SRC_DIR			=	src
+OBJ_DIR			=	obj
+INC_DIR			=	include
 
-OBJ_SERVER = $(SRC_SERVER:.c=.o)
-OBJ_CLIENT = $(SRC_CLIENT:.c=.o)
+LIBFT_DIR		=	libft
+LIBFT			=	$(LIBFT_DIR)/libft.a
 
-HEADER = $(INC_DIR)/minitalk.h
+INCLUDES		=	-I$(INC_DIR) -I$(LIBFT_DIR)/include
+HEADERS			=	$(INC_DIR)/minitalk.h
 
-all: 
-	@if [ -f $(NAME_SERVER) ] && [ -f $(NAME_CLIENT) ]; then \
-		echo "$(GREEN)✓ Everything is already compiled!$(RESET)"; \
-	else \
-		$(MAKE) $(NAME_SERVER) $(NAME_CLIENT); \
-		echo "$(GREEN)✓ Compilation complete!$(RESET)"; \
-	fi
+SRCS_SERVER		=	server.c server_utils.c
+SRCS_CLIENT		=	client.c client_utils.c
+SRCS_SERVER_B	=	server_bonus.c server_utils.c
+SRCS_CLIENT_B	=	client_bonus.c client_utils.c
+
+OBJS_SERVER		=	$(addprefix $(OBJ_DIR)/, $(SRCS_SERVER:.c=.o))
+OBJS_CLIENT		=	$(addprefix $(OBJ_DIR)/, $(SRCS_CLIENT:.c=.o))
+OBJS_SERVER_B	=	$(addprefix $(OBJ_DIR)/, $(SRCS_SERVER_B:.c=.o))
+OBJS_CLIENT_B	=	$(addprefix $(OBJ_DIR)/, $(SRCS_CLIENT_B:.c=.o))
+
+all:			$(SERVER) $(CLIENT)
+
+bonus:			$(SERVER_BONUS) $(CLIENT_BONUS)
+
+$(SERVER):		$(LIBFT) $(OBJS_SERVER)
+	@$(CC) $(CFLAGS) $(OBJS_SERVER) $(LIBFT) -o $@
+	@$(LOG) "$(C_DONE)" linked "$@"
+
+$(CLIENT):		$(LIBFT) $(OBJS_CLIENT)
+	@$(CC) $(CFLAGS) $(OBJS_CLIENT) $(LIBFT) -o $@
+	@$(LOG) "$(C_DONE)" linked "$@"
+
+$(SERVER_BONUS):	$(LIBFT) $(OBJS_SERVER_B)
+	@$(CC) $(CFLAGS) $(OBJS_SERVER_B) $(LIBFT) -o $@
+	@$(LOG) "$(C_DONE)" linked "$@"
+
+$(CLIENT_BONUS):	$(LIBFT) $(OBJS_CLIENT_B)
+	@$(CC) $(CFLAGS) $(OBJS_CLIENT_B) $(LIBFT) -o $@
+	@$(LOG) "$(C_DONE)" linked "$@"
 
 $(LIBFT):
-	@echo "$(CYAN)Compiling libft...$(RESET)"
-	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
-	@echo "$(GREEN)✓ Libft compiled!$(RESET)"
+	@$(SUBMAKE) $(LIBFT_DIR)
 
-$(NAME_SERVER): $(LIBFT) $(OBJ_SERVER)
-	@echo "$(YELLOW)Linking server...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ_SERVER) $(LIBFT) -o $(NAME_SERVER)
-	@echo "$(GREEN)✓ Server created!$(RESET)"
-
-$(NAME_CLIENT): $(LIBFT) $(OBJ_CLIENT)
-	@echo "$(YELLOW)Linking client...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJ_CLIENT) $(LIBFT) -o $(NAME_CLIENT)
-	@echo "$(GREEN)✓ Client created!$(RESET)"
-
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER)
-	@echo "$(BLUE)Compiling $<...$(RESET)"
-	@$(CC) $(CFLAGS) -I$(INC_DIR) -I$(LIBFT_DIR) -c $< -o $@
+$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(HEADERS)
+	@mkdir -p $(OBJ_DIR)
+	@$(LOG) "$(C_BUILD)" compiling "$<"
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@echo "$(RED)Cleaning objects...$(RESET)"
-	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
-	@rm -f $(OBJ_SERVER) $(OBJ_CLIENT)
-	@echo "$(GREEN)✓ Objects cleaned!$(RESET)"
+	@$(RM) $(OBJ_DIR)
+	@$(LOG) "$(C_CLEAN)" cleaned objects
+	@$(SUBMAKE) $(LIBFT_DIR) clean
 
-fclean: clean
-	@echo "$(RED)Cleaning executables...$(RESET)"
-	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
-	@rm -f $(NAME_SERVER) $(NAME_CLIENT)
-	@echo "$(GREEN)✓ All cleaned!$(RESET)"
+fclean:			clean
+	@$(RM) $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
+	@$(LOG) "$(C_RM)" removed "$(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)"
+	@$(SUBMAKE) $(LIBFT_DIR) fclean
 
-re: fclean all
+re:				fclean all
 
-.PHONY: all clean fclean re
+.PHONY:			all bonus clean fclean re

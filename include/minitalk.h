@@ -14,7 +14,7 @@
 # define MINITALK_H
 
 # include <signal.h>
-# include "../libft/libft.h"
+# include "libft.h"
 
 # define PID_ERROR "Error: Invalid PID\n"
 # define PID_NOTEXIST "Process doesn't exist\n"
@@ -37,15 +37,14 @@ typedef struct s_client
 	unsigned char	*message;
 	int				bit_position;
 	int				char_index;
+	int				finished;
 }	t_client;
 
-void	init_server_state(void);
-void	process_byte(char bit);
-void	handle_server_signal(int signum, siginfo_t *info, void *context);
+void	receive_bit(int signum, siginfo_t *info, int end_signal);
+void	start_server(void (*handler)(int, siginfo_t *, void *));
 
-void	init_client_state(int ac, char **av);
-void	send_bit_to_server(void);
-void	handle_client_signal(int signum);
 int		validate_arguments(int ac, char **av);
+void	send_bit_to_server(void);
+void	start_client(int ac, char **av, void (*handler)(int));
 
 #endif
